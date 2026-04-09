@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Asistente ARCA - Portal Premium",
+  "version": "1.0.0",
+  "description": "Herramienta avanzada de gestión y optimización para el portal de ARCA/AFIP.",
+  "author": "Wanda Cloud",
+  "action": {
+    "default_title": "Abrir Asistente ARCA",
+    "default_icon": "wanda_extension_icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["tabs"],
+  "icons": {
+    "128": "wanda_extension_icon.png"
+  }
+}
