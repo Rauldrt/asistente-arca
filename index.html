@@ -66,6 +66,19 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes revealUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -139,29 +152,53 @@
     </section>
 
     <!-- Solutions Section -->
-    <section class="py-32 relative">
+    <section class="py-24 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass p-10 rounded-[32px] border-white/50 hover:border-blue-200 transition-colors group">
-                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003a70] mb-8 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <div class="text-center mb-16">
+                <h2 class="font-outfit text-4xl md:text-5xl font-black text-[#003a70] mb-4">Potencia para todos los Usuarios</h2>
+                <p class="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Incluso si no usas Wanda Cloud, nuestro asistente transforma tu experiencia en ARCA.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <!-- External User Card 1 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:shadow-2xl hover:shadow-blue-200/40 transition-all duration-500 group" style="animation-delay: 0.1s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     </div>
-                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Sincronización Veloz</h3>
-                    <p class="text-slate-500 font-medium">Conectamos tus datos de Wanda Cloud con el panel de facturación de ARCA en milisegundos.</p>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Importación Universal CSV</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">¿Vienes de un Excel u otro sistema? Sube tu catálogo completo y factura masivamente sin errores manuales.</p>
                 </div>
-                <div class="glass p-10 rounded-[32px] border-white/50 hover:border-blue-200 transition-colors group">
-                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003a70] mb-8 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+
+                <!-- External User Card 2 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:shadow-2xl hover:shadow-blue-200/40 transition-all duration-500 group" style="animation-delay: 0.3s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
-                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Seguridad Bancaria</h3>
-                    <p class="text-slate-500 font-medium">Tus credenciales nunca salen de tu navegador. Funcionamiento 100% local y seguro.</p>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Memoria Local Inteligente</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">La extensión recuerda tus productos, alícuotas y unidades para que nunca tengas que escribir lo mismo dos veces en ARCA.</p>
                 </div>
-                <div class="glass p-10 rounded-[32px] border-white/50 hover:border-blue-200 transition-colors group">
-                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-[#003a70] mb-8 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+
+                <!-- External User Card 3 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:shadow-2xl hover:shadow-blue-200/40 transition-all duration-500 group" style="animation-delay: 0.5s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Gestión de Clientes</h3>
-                    <p class="text-slate-500 font-medium">Importa y gestiona tus clientes recurrentes sin tener que cargar datos manualmente cada vez.</p>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Totalmente Gratuito</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">Sin límites ni suscripciones para el uso manual. Una herramienta pensada para simplificar el dia a dia del emprendedor argentino.</p>
+                </div>
+            </div>
+
+            <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-blue-50/50 p-12 rounded-[50px] border border-blue-100/50" style="animation-delay: 0.7s;">
+                <div class="flex flex-col justify-center">
+                    <span class="text-blue-500 font-black uppercase tracking-widest text-xs mb-4">Exclusivo Wanda Cloud</span>
+                    <h3 class="font-outfit text-3xl font-black text-[#003a70] mb-6">Sincronización Automática</h3>
+                    <p class="text-slate-600 font-medium mb-8">Si ya eres usuario de Wanda, tus productos y stock se sincronizan por arte de magia. Facturación ARCA en un solo clic.</p>
+                    <a href="https://wanda-cloud-ahil.vercel.app/" class="text-[#003a70] font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+                        Conoce el ecosistema Wanda Cloud <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+                <div class="relative rounded-[32px] overflow-hidden shadow-2xl">
+                    <img src="cloud_dashboard.png" alt="Cloud Dashboard" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
