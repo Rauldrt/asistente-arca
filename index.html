@@ -81,37 +81,53 @@
 
         /* IA Button Halo Animation */
         /* IA Button "Beam" Border Animation */
+        /* IA Button "Beam" Border Animation */
         .magic-btn {
             position: relative;
             z-index: 1;
             padding: 1.5px;
             background: transparent;
-            overflow: hidden; /* Encapsulate the rotating beams */
+            overflow: visible; /* Re-enabled to allow blurry glow to shine through */
             border-radius: 14px;
         }
-        .magic-btn::before {
+        .magic-btn-glow {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: inherit;
+            z-index: -1;
+        }
+        .magic-btn-glow::before {
             content: '';
             position: absolute;
-            width: 150%;
-            height: 150%;
-            left: -25%;
-            top: -25%;
+            width: 200%;
+            height: 200%;
+            left: -50%;
+            top: -50%;
             background: conic-gradient(
-                transparent 70%, 
-                #3b82f6 80%, 
-                #06b6d4 90%, 
-                #fff 100%
+                transparent 60%, 
+                rgba(59, 130, 246, 0.4) 75%, 
+                rgba(6, 182, 212, 0.8) 85%, 
+                rgba(255, 255, 255, 0.9) 95%,
+                white 100%
             );
-            z-index: -1;
+            filter: blur(4px); /* Soften the beam itself */
             animation: rotate-beam 3s linear infinite;
         }
         .magic-btn::after {
             content: '';
             position: absolute;
-            inset: -4px;
-            background: inherit; /* Not needed here but for logic */
+            inset: -8px;
+            background: conic-gradient(
+                from 0deg,
+                transparent 60%, 
+                rgba(59, 130, 246, 0.3) 75%, 
+                rgba(6, 182, 212, 0.5) 85%, 
+                white 100%
+            );
             z-index: -2;
-            filter: blur(8px);
+            filter: blur(20px); /* Strong dreamy blur */
+            animation: rotate-beam 3s linear infinite;
             opacity: 0.6;
         }
         @keyframes rotate-beam {
@@ -121,7 +137,7 @@
         .magic-btn-inner {
             background: #003a70;
             padding: 10px 24px;
-            border-radius: 12.5px; /* Slightly adjust to fit inside padding */
+            border-radius: 12.5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -174,6 +190,7 @@
             <div class="hidden md:flex items-center gap-8">
                 <a href="#privacidad" class="text-sm font-semibold text-slate-500 hover:text-[#003a70] transition-colors">Privacidad</a>
                 <button onclick="toggleModal(true)" class="magic-btn rounded-xl hover:scale-105 transition-all shadow-xl group">
+                    <div class="magic-btn-glow"></div>
                     <div class="magic-btn-inner">
                         <span class="relative z-10">La Magia</span>
                     </div>
