@@ -78,6 +78,48 @@
             opacity: 1;
             transform: translateY(0) scale(1, 1);
         }
+
+        /* IA Button Halo Animation */
+        .magic-btn::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(10px);
+            animation: ia-halo 12s linear infinite;
+            opacity: 0.6;
+            border-radius: 16px;
+        }
+        @keyframes ia-halo {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes gradient-xy {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-xy {
+            animation: gradient-xy 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        /* Modal Accordion Styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.3s ease;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-item.active .chevron-icon {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -104,7 +146,10 @@
             </div>
             <div class="hidden md:flex items-center gap-8">
                 <a href="#privacidad" class="text-sm font-semibold text-slate-500 hover:text-[#003a70] transition-colors">Privacidad</a>
-                <button onclick="toggleModal(true)" class="px-6 py-2.5 border-2 border-[#003a70] text-[#003a70] rounded-xl font-bold text-sm hover:bg-[#003a70] hover:text-white transition-all shadow-sm">La Magia</button>
+                <button onclick="toggleModal(true)" class="magic-btn relative px-6 py-2.5 bg-[#003a70] text-white rounded-xl font-bold text-sm hover:scale-105 transition-all shadow-lg overflow-hidden">
+                    <span class="relative z-10">La Magia</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 opacity-50 animate-gradient-xy"></div>
+                </button>
             </div>
         </div>
     </nav>
@@ -125,15 +170,11 @@
             <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
                 La extensión oficial que conecta tu gestión con ARCA/AFIP de forma fluida. Importa productos, sincroniza stock y factura en segundos.
             </p>
-            <div class="mt-28 px-4 flex flex-wrap justify-center gap-6">
+            <div class="mt-28 px-4 flex justify-center">
                 <a href="miasistenteafip.zip" download="WandaAsistenteARCA.zip" class="btn-arca px-12 py-5 text-white rounded-[24px] font-black text-xl shadow-[0_20px_40px_rgba(0,58,112,0.15)] flex items-center gap-4 hover:scale-105 transition-transform">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>
                     Instalar Extensión (.ZIP)
                 </a>
-                <button onclick="toggleModal(true)" class="px-12 py-5 bg-white border-2 border-blue-100 text-[#003a70] rounded-[24px] font-black text-xl shadow-xl hover:bg-blue-50 transition-all hover:scale-105 flex items-center gap-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    La Magia
-                </button>
             </div>
         </div>
     </section>
@@ -241,55 +282,77 @@
 
     <!-- Modal: La Magia -->
     <div id="magicModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-[#001a35]/80 backdrop-blur-md" onclick="toggleModal(false)"></div>
-        <div class="relative bg-white rounded-[40px] shadow-2xl shadow-blue-500/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto overflow-x-hidden p-8 md:p-12 border border-blue-100 reveal-modal">
+        <div class="absolute inset-0 bg-[#001a35]/90 backdrop-blur-md" onclick="toggleModal(false)"></div>
+        <div class="relative bg-white rounded-[40px] shadow-2xl shadow-blue-500/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 md:p-12 border border-blue-100 reveal-modal">
             <button onclick="toggleModal(false)" class="absolute top-6 right-6 p-2 text-slate-400 hover:text-red-500 transition-colors">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
             <div class="mb-10 text-center">
-                <span class="text-blue-500 font-black uppercase tracking-widest text-xs mb-2 block">Descubre el Secreto</span>
-                <h2 class="font-outfit text-4xl font-black text-[#003a70]">¿Cómo funciona el Asistente?</h2>
+                <span class="text-blue-500 font-black uppercase tracking-widest text-xs mb-2 block">El Futuro de la Facturación</span>
+                <h2 class="font-outfit text-4xl font-black text-[#003a70]">Descubre la Magia</h2>
                 <div class="h-1 w-20 bg-blue-500 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div class="space-y-8">
-                <!-- Step 1 -->
-                <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-black text-xl">1</div>
-                    <div>
-                        <h3 class="font-outfit text-xl font-bold text-slate-800 mb-2">Instalación Inteligente</h3>
-                        <p class="text-slate-500 leading-relaxed font-medium">Descarga el ZIP, actívalo en Chrome y el asistente se integrará automáticamente en el sitio oficial de ARCA (ex AFIP).</p>
+            <div class="space-y-4">
+                <!-- Accordion 1: Instalación -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden active">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">1. Guía de Instalación Precisa</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <ul class="space-y-4 py-2">
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">A.</span> Descarga el archivo **ZIP** desde el botón principal de esta página.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">B.</span> Abre Chrome y escribe: `chrome://extensions` en la barra de direcciones.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">C.</span> Activa el **"Modo desarrollador"** en la esquina superior derecha.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">D.</span> Arrastra el ZIP descargado a la ventana o usa "Cargar descomprimida".
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <!-- Step 2 -->
-                <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-black text-xl">2</div>
-                    <div>
-                        <h3 class="font-outfit text-xl font-bold text-slate-800 mb-2">Modo Manual: Memoria Local</h3>
-                        <p class="text-slate-500 leading-relaxed font-medium">Al facturar, la extensión "filtra" tus productos. Puedes importar un Excel o dejar que el sistema aprenda tus movimientos para automatizar futuras cargas.</p>
+                <!-- Accordion 2: Visuales -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">2. Interfaz y Experiencia</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <div class="py-10 text-center border-2 border-dashed border-blue-200 rounded-2xl">
+                            <p class="text-slate-400 font-bold italic text-sm">Próximamente: Galería de Capturas</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="flex gap-6 items-start">
-                    <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 font-black text-xl">3</div>
-                    <div>
-                        <h3 class="font-outfit text-xl font-bold text-slate-800 mb-2">Modo Wanda Cloud: La Magia Real</h3>
-                        <p class="text-slate-500 leading-relaxed font-medium">Si eres cliente Wanda, tus ventas se sincronizan en milisegundos. Solo presionas un botón y la extensión rellena todos los campos por ti: cliente, productos, precios e impuestos.</p>
+                <!-- Accordion 3: Wanda Cloud -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">3. Conexión Wanda Cloud</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <div class="py-4">
+                            <p class="text-slate-600 text-sm font-medium leading-relaxed mb-6">Optimiza tu negocio al 100% integrando tu stock y ventas reales directamente con el portal de ARCA.</p>
+                            <a href="https://wanda-cloud-ahil.vercel.app/" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-md">
+                                Visitar Wanda Cloud
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Final Note -->
-                <div class="bg-blue-50 p-6 rounded-3xl border border-blue-100/50 mt-8">
-                    <p class="text-sm text-[#003a70] font-bold text-center italic">"Convierte una tarea de 5 minutos en una acción de 5 segundos."</p>
                 </div>
             </div>
 
-            <div class="mt-10 flex justify-center">
-                <button onclick="toggleModal(false)" class="px-10 py-4 bg-[#003a70] text-white font-black rounded-2xl shadow-xl hover:shadow-[#003a70]/30 transition-all scale-100 hover:scale-105">
-                    ¡Entendido!
+            <div class="mt-8 flex justify-center">
+                <button onclick="toggleModal(false)" class="px-8 py-3 bg-[#003a70] text-white font-black rounded-2xl shadow-xl hover:shadow-[#003a70]/30 transition-all hover:scale-105">
+                    ¡Todo Claro!
                 </button>
             </div>
         </div>
@@ -311,10 +374,24 @@
             const modal = document.getElementById('magicModal');
             if (show) {
                 modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden'; // Prevent scroll
+                document.body.style.overflow = 'hidden'; 
             } else {
                 modal.classList.add('hidden');
-                document.body.style.overflow = 'auto'; // Re-enable scroll
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Accordion Logic
+        function toggleAccordion(btn) {
+            const item = btn.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
+            
+            // Open clicked if it wasn't active
+            if (!isActive) {
+                item.classList.add('active');
             }
         }
 
