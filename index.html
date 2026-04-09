@@ -80,42 +80,48 @@
         }
 
         /* IA Button Halo Animation */
+        /* IA Button "Beam" Border Animation */
         .magic-btn {
             position: relative;
             z-index: 1;
-            padding: 2px; /* For the border width */
-            background: rgba(0, 58, 112, 0.2);
+            padding: 1.5px;
+            background: transparent;
+            overflow: hidden; /* Encapsulate the rotating beams */
+            border-radius: 14px;
         }
         .magic-btn::before {
             content: '';
             position: absolute;
-            inset: -2px;
-            background: conic-gradient(from 0deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
+            width: 150%;
+            height: 150%;
+            left: -25%;
+            top: -25%;
+            background: conic-gradient(
+                transparent 70%, 
+                #3b82f6 80%, 
+                #06b6d4 90%, 
+                #fff 100%
+            );
             z-index: -1;
-            animation: rotate-border 4s linear infinite;
-            border-radius: 14px;
+            animation: rotate-beam 3s linear infinite;
         }
         .magic-btn::after {
             content: '';
             position: absolute;
-            inset: -6px;
-            background: inherit;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
-            background-size: 400%;
+            inset: -4px;
+            background: inherit; /* Not needed here but for logic */
             z-index: -2;
-            filter: blur(12px);
-            animation: rotate-border 10s linear infinite;
-            opacity: 0.5;
-            border-radius: 16px;
+            filter: blur(8px);
+            opacity: 0.6;
         }
-        @keyframes rotate-border {
+        @keyframes rotate-beam {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
         .magic-btn-inner {
             background: #003a70;
             padding: 10px 24px;
-            border-radius: 12px;
+            border-radius: 12.5px; /* Slightly adjust to fit inside padding */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -124,6 +130,8 @@
             font-weight: 800;
             color: white;
             transition: all 0.3s;
+            position: relative;
+            z-index: 1;
         }
         /* Modal Accordion Styles */
         .accordion-content {
