@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanda Cloud - Asistente ARCA (AFIP)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --afip-blue: #003a70;
+            --arca-main: #00AEEF;
+            --cloud-white: #f8fbff;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--cloud-white); overflow-x: hidden; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        
+        /* Cloud Background Animation */
+        .cloud-background {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(180deg, #e0f2fe 0%, #f8fbff 100%);
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.4;
+            filter: blur(40px);
+            animation: moveClouds linear infinite;
+        }
+        @keyframes moveClouds {
+            from { transform: translateX(-200px); }
+            to { transform: translateX(110vw); }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 58, 112, 0.05);
+        }
+
+        .btn-arca {
+            background: var(--afip-blue);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-arca:hover {
+            background: #002a50;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 58, 112, 0.2);
+        }
+
+        .floating-dashboard {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(0.5deg); }
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--afip-blue) 0%, var(--arca-main) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Reveal Animation - Elastic Growth from Top */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px) scale(0.6, 0);
+            transform-origin: center top;
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1, 1);
+        }
+
+        /* IA Button Halo Animation */
+        /* IA Button "Beam" Border Animation */
+        /* IA Button "Beam" Border Animation */
+        .magic-btn {
+            position: relative;
+            z-index: 1;
+            padding: 1.5px;
+            background: transparent;
+            overflow: visible; /* Re-enabled to allow blurry glow to shine through */
+            border-radius: 14px;
+        }
+        .magic-btn-glow {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: inherit;
+            z-index: -1;
+        }
+        .magic-btn-glow::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: -50%;
+            top: -50%;
+            background: conic-gradient(
+                transparent 60%, 
+                rgba(59, 130, 246, 0.4) 75%, 
+                rgba(6, 182, 212, 0.8) 85%, 
+                rgba(255, 255, 255, 0.9) 95%,
+                white 100%
+            );
+            filter: blur(4px);
+            animation: rotate-beam 8s linear infinite; /* Slowed down for Aurora effect */
+        }
+        .magic-btn::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: conic-gradient(
+                from 0deg,
+                transparent 60%, 
+                rgba(59, 130, 246, 0.3) 75%, 
+                rgba(6, 182, 212, 0.5) 85%, 
+                white 100%
+            );
+            z-index: -2;
+            filter: blur(20px);
+            animation: rotate-beam 8s linear infinite, beam-breathe 4s ease-in-out infinite alternate;
+            opacity: 0.6;
+        }
+        @keyframes rotate-beam {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes beam-breathe {
+            from { opacity: 0.3; filter: blur(15px); }
+            to { opacity: 0.7; filter: blur(25px); }
+        }
+        .magic-btn-inner {
+            background: #003a70;
+            padding: 10px 24px;
+            border-radius: 12.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-weight: 800;
+            color: white;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        /* Hero Aurora Effect */
+        .hero-aurora-container {
+            position: relative;
+            display: inline-block;
+            padding: 2rem;
+        }
+        .hero-aurora-glow {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .hero-aurora-glow::before, .hero-aurora-glow::after {
+            content: '';
+            position: absolute;
+            inset: -20%;
+            background: conic-gradient(
+                from var(--angle, 0deg),
+                transparent 50%,
+                rgba(59, 130, 246, 0.3) 70%,
+                rgba(6, 182, 212, 0.4) 85%,
+                rgba(255, 255, 255, 0.2) 100%
+            );
+            animation: rotate-beam 12s linear infinite;
+            border-radius: 50%;
+        }
+        .hero-aurora-glow::after {
+            animation: rotate-beam 15s linear infinite reverse;
+            opacity: 0.5;
+            background: conic-gradient(
+                from var(--angle, 0deg),
+                transparent 50%,
+                rgba(139, 92, 246, 0.2) 70%,
+                rgba(59, 130, 246, 0.3) 85%,
+                transparent 100%
+            );
+        }
+
+        /* Modal Accordion Styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.3s ease;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-item.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="cloud-background">
+        <div class="cloud w-64 h-32 top-10 left-[-100px]" style="animation-duration: 40s;"></div>
+        <div class="cloud w-80 h-40 top-1/4 left-[-150px]" style="animation-duration: 65s; animation-delay: -10s;"></div>
+        <div class="cloud w-96 h-48 top-2/3 left-[-200px]" style="animation-duration: 50s; animation-delay: -25s;"></div>
+        <div class="cloud w-72 h-36 top-1/2 left-[-100px]" style="animation-duration: 80s; animation-delay: -5s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-[#003a70] rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-blue-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                    <svg class="text-white w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+                <div>
+                    <span class="font-outfit text-2xl font-black tracking-tighter text-[#003a70]">Asistente ARCA</span>
+                    <span class="block text-[10px] uppercase tracking-[0.1em] font-bold text-blue-500 leading-none">By Wanda Cloud</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#privacidad" class="text-sm font-semibold text-slate-500 hover:text-[#003a70] transition-colors">Privacidad</a>
+                <button onclick="toggleModal(true)" class="magic-btn rounded-xl hover:scale-105 transition-all shadow-xl group">
+                    <div class="magic-btn-glow"></div>
+                    <div class="magic-btn-inner">
+                        <span class="relative z-10">La Magia</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-48 pb-32 px-6 overflow-hidden">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full glass border border-blue-100/50 text-[#003a70] text-sm font-bold mb-10 animate-bounce">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                </span>
+                Impulsa tu facturación en ARCA
+            </div>
+            <div class="hero-aurora-container">
+                <div class="hero-aurora-glow"></div>
+                <h1 class="relative z-10 font-outfit text-6xl md:text-[5.5rem] font-black tracking-tight mb-8 leading-[0.95] text-[#001e30]">
+                    Optimizando tu <br /> <span class="text-gradient">facturación en ARCA</span>
+                </h1>
+            </div>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
+                La extensión oficial que conecta tu gestión con ARCA/AFIP de forma fluida. Importa productos, sincroniza stock y factura en segundos.
+            </p>
+            <div class="mt-28 px-4 flex justify-center">
+                <a href="miasistenteafip.zip" download="WandaAsistenteARCA.zip" class="btn-arca px-12 py-5 text-white rounded-[24px] font-black text-xl shadow-[0_20px_40px_rgba(0,58,112,0.15)] flex items-center gap-4 hover:scale-105 transition-transform">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg>
+                    Instalar Extensión (.ZIP)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Width Parallax Banner -->
+    <section class="relative w-full h-[60vh] overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 z-0">
+            <div 
+                class="w-full h-[120%] bg-cover bg-center bg-fixed" 
+                style="background-image: url('cloud_dashboard.png'); background-attachment: fixed;"
+            >
+                <div class="absolute inset-0 bg-blue-900/10 backdrop-blur-[2px]"></div>
+            </div>
+        </div>
+        <div class="relative z-10 glass px-10 py-6 rounded-3xl border-white/30 text-center max-w-lg mx-auto transform hover:scale-105 transition-transform duration-700">
+            <h2 class="font-outfit text-3xl font-black text-[#003a70]">Explora la Interfaz Cloud</h2>
+            <p class="text-slate-600 font-medium">Diseñada para la máxima productividad fiscal.</p>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-outfit text-4xl md:text-5xl font-black text-[#003a70] mb-4">Potencia para todos los Usuarios</h2>
+                <p class="text-slate-500 font-medium max-w-2xl mx-auto text-lg">Incluso si no usas Wanda Cloud, nuestro asistente transforma tu experiencia en ARCA.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <!-- External User Card 1 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:-translate-y-6 hover:scale-[1.03] hover:shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3),0_20px_40px_-20px_rgba(147,51,234,0.3)] transition-all duration-700 group cursor-pointer" style="transition-delay: 0.1s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    </div>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Importación Universal CSV</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">¿Vienes de un Excel u otro sistema? Sube tu catálogo completo y factura masivamente sin errores manuales.</p>
+                </div>
+
+                <!-- External User Card 2 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:-translate-y-6 hover:scale-[1.03] hover:shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3),0_20px_40px_-20px_rgba(147,51,234,0.3)] transition-all duration-700 group cursor-pointer" style="transition-delay: 0.25s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Memoria Local Inteligente</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">La extensión recuerda tus productos, alícuotas y unidades para que nunca tengas que escribir lo mismo dos veces en ARCA.</p>
+                </div>
+
+                <!-- External User Card 3 -->
+                <div class="reveal glass p-10 rounded-[40px] border-blue-100/30 hover:-translate-y-6 hover:scale-[1.03] hover:shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3),0_20px_40px_-20px_rgba(147,51,234,0.3)] transition-all duration-700 group cursor-pointer" style="transition-delay: 0.4s;">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg group-hover:rotate-6 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-outfit text-2xl font-black text-[#003a70] mb-4">Totalmente Gratuito</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">Sin límites ni suscripciones para el uso manual. Una herramienta pensada para simplificar el dia a dia del emprendedor argentino.</p>
+                </div>
+            </div>
+
+            <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-blue-50/50 p-12 rounded-[50px] border border-blue-100/50" style="transition-delay: 0.2s;">
+                <div class="flex flex-col justify-center">
+                    <span class="text-blue-500 font-black uppercase tracking-widest text-xs mb-4">Exclusivo Wanda Cloud</span>
+                    <h3 class="font-outfit text-3xl font-black text-[#003a70] mb-6">Sincronización Automática</h3>
+                    <p class="text-slate-600 font-medium mb-8">Si ya eres usuario de Wanda, tus productos y stock se sincronizan por arte de magia. Facturación ARCA en un solo clic.</p>
+                    <a href="https://wanda-cloud-ahil.vercel.app/" class="text-[#003a70] font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+                        Conoce el ecosistema Wanda Cloud <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+                <div class="relative rounded-[32px] overflow-hidden shadow-2xl">
+                    <img src="cloud_dashboard.png" alt="Cloud Dashboard" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section id="privacidad" class="py-32 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="font-outfit text-4xl font-black text-[#001e30] mb-12 text-center">Transparencia en la Nube</h2>
+            <div class="space-y-6">
+                <div class="glass p-8 rounded-3xl border-white/60">
+                    <h4 class="font-bold text-[#003a70] mb-3 text-lg">¿Cómo funciona el modo Cloud?</h4>
+                    <p class="text-slate-600 font-medium">Al activar tu cuenta de Wanda Cloud, la extensión habilita un puente de datos encriptado que lee tus productos y stock directamente desde la base de datos de Wanda, permitiéndote facturarlos en ARCA con un solo clic.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-white/60">
+                    <h4 class="font-bold text-[#003a70] mb-3 text-lg">Privacidad y Protección de Datos</h4>
+                    <p class="text-slate-600 font-medium">Cumplimos con los más altos estándares de protección. No guardamos registros de tus facturas ni tenemos acceso a tu CUIT de forma externa. Todo el procesamiento ocurre en la extensión activa.</p>
+                </div>
+            </div>
+            <p class="text-center italic text-xs text-slate-400 mt-12 tracking-wide font-medium">Actualizado el 8 de abril de 2026. Wanda Cloud Systems Argentina.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-white/20 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col items-center gap-6">
+                <div class="w-10 h-10 bg-[#003a70] rounded-xl flex items-center justify-center shadow-md">
+                    <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+                <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">Wanda Cloud Systems</p>
+                <div class="h-px w-20 bg-blue-100"></div>
+                <p class="text-sm text-slate-400 font-medium">© 2026. Innovación en la gestión fiscal Argentina.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal: La Magia -->
+    <div id="magicModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-[#001a35]/90 backdrop-blur-md" onclick="toggleModal(false)"></div>
+        <div class="relative bg-white rounded-[40px] shadow-2xl shadow-blue-500/30 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 md:p-12 border border-blue-100 reveal-modal">
+            <button onclick="toggleModal(false)" class="absolute top-6 right-6 p-2 text-slate-400 hover:text-red-500 transition-colors">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="mb-10 text-center">
+                <span class="text-blue-500 font-black uppercase tracking-widest text-xs mb-2 block">El Futuro de la Facturación</span>
+                <h2 class="font-outfit text-4xl font-black text-[#003a70]">Descubre la Magia</h2>
+                <div class="h-1 w-20 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Accordion 1: Instalación -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden active">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">1. Guía de Instalación Precisa</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <ul class="space-y-4 py-2">
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">A.</span> Descarga el archivo **ZIP** desde el botón principal de esta página.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">B.</span> Abre Chrome y escribe: `chrome://extensions` en la barra de direcciones.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">C.</span> Activa el **"Modo desarrollador"** en la esquina superior derecha.
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-600 font-medium text-balance">
+                                <span class="text-blue-600 font-bold">D.</span> Arrastra el ZIP descargado a la ventana o usa "Cargar descomprimida".
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Accordion 2: Visuales -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">2. Interfaz y Experiencia</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <div class="py-10 text-center border-2 border-dashed border-blue-200 rounded-2xl">
+                            <p class="text-slate-400 font-bold italic text-sm">Próximamente: Galería de Capturas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion 3: Wanda Cloud -->
+                <div class="accordion-item glass rounded-3xl border border-blue-100/50 overflow-hidden">
+                    <button class="w-full flex items-center justify-between p-6 text-left group" onclick="toggleAccordion(this)">
+                        <h3 class="font-outfit text-xl font-bold text-[#003a70]">3. Conexión Wanda Cloud</h3>
+                        <svg class="w-6 h-6 text-blue-500 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content px-6 bg-blue-50/30">
+                        <div class="py-4">
+                            <p class="text-slate-600 text-sm font-medium leading-relaxed mb-6">Optimiza tu negocio al 100% integrando tu stock y ventas reales directamente con el portal de ARCA.</p>
+                            <a href="https://wanda-cloud-ahil.vercel.app/" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-md">
+                                Visitar Wanda Cloud
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button onclick="toggleModal(false)" class="px-8 py-3 bg-[#003a70] text-white font-black rounded-2xl shadow-xl hover:shadow-[#003a70]/30 transition-all hover:scale-105">
+                    ¡Todo Claro!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .reveal-modal {
+            animation: modalIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.8) translateY(40px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+
+    <script>
+        // Modal Logic
+        function toggleModal(show) {
+            const modal = document.getElementById('magicModal');
+            if (show) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Accordion Logic
+        function toggleAccordion(btn) {
+            const item = btn.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
+            
+            // Open clicked if it wasn't active
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
