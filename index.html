@@ -153,6 +153,46 @@
             position: relative;
             z-index: 1;
         }
+        /* Hero Aurora Effect */
+        .hero-aurora-container {
+            position: relative;
+            display: inline-block;
+            padding: 2rem;
+        }
+        .hero-aurora-glow {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .hero-aurora-glow::before, .hero-aurora-glow::after {
+            content: '';
+            position: absolute;
+            inset: -20%;
+            background: conic-gradient(
+                from var(--angle, 0deg),
+                transparent 50%,
+                rgba(59, 130, 246, 0.3) 70%,
+                rgba(6, 182, 212, 0.4) 85%,
+                rgba(255, 255, 255, 0.2) 100%
+            );
+            animation: rotate-beam 12s linear infinite;
+            border-radius: 50%;
+        }
+        .hero-aurora-glow::after {
+            animation: rotate-beam 15s linear infinite reverse;
+            opacity: 0.5;
+            background: conic-gradient(
+                from var(--angle, 0deg),
+                transparent 50%,
+                rgba(139, 92, 246, 0.2) 70%,
+                rgba(59, 130, 246, 0.3) 85%,
+                transparent 100%
+            );
+        }
+
         /* Modal Accordion Styles */
         .accordion-content {
             max-height: 0;
@@ -213,9 +253,12 @@
                 </span>
                 Impulsa tu facturación en ARCA
             </div>
-            <h1 class="font-outfit text-6xl md:text-[5.5rem] font-black tracking-tight mb-8 leading-[0.95] text-[#001e30]">
-                Optimizando tu <br /> <span class="text-gradient">facturación en ARCA</span>
-            </h1>
+            <div class="hero-aurora-container">
+                <div class="hero-aurora-glow"></div>
+                <h1 class="relative z-10 font-outfit text-6xl md:text-[5.5rem] font-black tracking-tight mb-8 leading-[0.95] text-[#001e30]">
+                    Optimizando tu <br /> <span class="text-gradient">facturación en ARCA</span>
+                </h1>
+            </div>
             <p class="text-xl text-slate-600 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
                 La extensión oficial que conecta tu gestión con ARCA/AFIP de forma fluida. Importa productos, sincroniza stock y factura en segundos.
             </p>
